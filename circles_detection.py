@@ -6,7 +6,7 @@ import itertools
 import sys
 import os as _os
 
-path = "/home/jfreitas/Imagens_de_teste/"
+path = "/home/jfreitas/C1-imagens/"
 files = [f for f in _os.walk(path)]
 print('Number of folders:',len(files))
 
@@ -16,6 +16,8 @@ files = [(f[0],f[1],sorted([img for img in f[2] if img[-4:]=='.jpg']))
         for f in files]
 nImg = sum([len(f[2]) for f in files])
 print('Number of files: ',nImg)
+
+alturas = np.array([])
 
 for (dirpath, dirnames, filenames) in files :
 	for filename in filenames :
@@ -49,7 +51,16 @@ for (dirpath, dirnames, filenames) in files :
             #     # convert the (x, y) coordinates and radius of the circles to integers
                 circles = np.round(circles[0, :]).astype("int")
                 altura_bolhas = np.max(circles[:,1])
-                print(altura_bolhas)
+                alturas = np.append(alturas, altura_bolhas)
+                # if altura_bolhas > 2800:
+                #     circles = circles[circles[:,1].argsort()]
+                # else:
+                #     circles = circles[circles[:,0].argsort()]
+                # inicio = circles[:3]
+                # final = circles[-3:]
+                # print((final[1][1] - inicio[1][1])/(final[1][0] - inicio[1][0]))
+print(np.mean(alturas))
+print(np.std(alturas))
 # # construct the argument parser and parse the arguments
 # ap = argparse.ArgumentParser()
 # ap.add_argument("-i", "--image", required = True, help = "Path to the image")
