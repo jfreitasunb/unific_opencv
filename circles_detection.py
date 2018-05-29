@@ -38,11 +38,11 @@ cv2.resizeWindow('output', window_width, window_height)
 if circles is not None:
 # 	# convert the (x, y) coordinates and radius of the circles to integers
 	circles = np.round(circles[0, :]).astype("int")
-	teste = circles[circles[:,1].argsort()] 
+	circles = circles[circles[:,1].argsort()] 
  
 # 	# loop over the (x, y) coordinates and radius of the circles
-	inicio = teste[:3]
-	final = teste[-3:]
+	inicio = circles[:3]
+	final = circles[-3:]
 	cabecalho = np.concatenate((inicio, final), axis=0)
 	print(cabecalho)
 	print(np.arctan((final[1][1] - inicio[1][1])/(final[1][0] - inicio[1][0])))
