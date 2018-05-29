@@ -22,6 +22,34 @@ for (dirpath, dirnames, filenames) in files :
             pathfile = _os.path.join(dirpath,filename)
             relpathfile = _os.path.join(_os.path.relpath(dirpath,path),
                                             filename)
+            image = cv2.imread(pathfile)
+            output = image.copy()
+            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            # detect circles in the image
+
+            circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT,1,10,param1=50,param2=30,minRadius=15,maxRadius=20)
+
+            screen_res = 1280, 720
+            scale_width = screen_res[0] / image.shape[1]
+            scale_height = screen_res[1] / image.shape[0]
+            scale = min(scale_width, scale_height)
+
+            #resized window width and height
+            window_width = int(image.shape[1] * scale)
+            window_height = int(image.shape[0] * scale)
+
+            #cv2.WINDOW_NORMAL makes the output window resizealbe
+            cv2.namedWindow('output', cv2.WINDOW_NORMAL)
+
+            #resize the window according to the screen resolution
+            cv2.resizeWindow('output', window_width, window_height)
+
+            # # ensure at least some circles were found
+            if circles is not None:
+            #     # convert the (x, y) coordinates and radius of the circles to integers
+                circles = np.round(circles[0, :]).astype("int")
+                altura_bolhas = np.max(circles[:,1])
+                print(altura_bolhas)
 # # construct the argument parser and parse the arguments
 # ap = argparse.ArgumentParser()
 # ap.add_argument("-i", "--image", required = True, help = "Path to the image")
