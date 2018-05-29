@@ -44,8 +44,8 @@ if circles is not None:
 	inicio = circles[:3]
 	final = circles[-3:]
 	cabecalho = np.concatenate((inicio, final), axis=0)
-	print(cabecalho)
-	print(np.arctan((final[1][1] - inicio[1][1])/(final[1][0] - inicio[1][0])))
+	print(np.max(circles[:,1]))
+	# print(np.arctan((final[1][1] - inicio[1][1])/(final[1][0] - inicio[1][0])))
 	# for i in circles:
 		# print(i)
 	for (x, y, r) in cabecalho:
@@ -56,6 +56,6 @@ if circles is not None:
 		cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
  
 # 	# show the output image
-	cv2.imshow("output", np.hstack([output]))
-	cv2.waitKey(0)
-	cv2.destroyAllWindows()
+	# cv2.imshow("output", np.hstack([output]))
+	# cv2.waitKey(0)
+	# cv2.destroyAllWindows()
