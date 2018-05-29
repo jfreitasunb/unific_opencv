@@ -5,6 +5,9 @@
 import numpy as np
 import argparse
 import cv2
+import itertools
+import sys
+import os as _os
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
