@@ -14,6 +14,21 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required = True, help = "Path to the image")
 args = vars(ap.parse_args())
 
+screen_res = 1280, 720
+scale_width = screen_res[0] / image.shape[1]
+scale_height = screen_res[1] / image.shape[0]
+scale = min(scale_width, scale_height)
+
+#resized window width and height
+window_width = int(image.shape[1] * scale)
+window_height = int(image.shape[0] * scale)
+
+#cv2.WINDOW_NORMAL makes the output window resizealbe
+cv2.namedWindow('output', cv2.WINDOW_NORMAL)
+
+#resize the window according to the screen resolution
+cv2.resizeWindow('output', window_width, window_height)
+
 # load the image, clone it for output, and then convert it to grayscale
 image = cv2.imread(args["image"])
 output = image.copy()
