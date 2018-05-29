@@ -36,26 +36,31 @@ cv2.resizeWindow('output', window_width, window_height)
 
 # # ensure at least some circles were found
 if circles is not None:
-# 	# convert the (x, y) coordinates and radius of the circles to integers
-	circles = np.round(circles[0, :]).astype("int")
-	circles = circles[circles[:,1].argsort()] 
+#     # convert the (x, y) coordinates and radius of the circles to integers
+    circles = np.round(circles[0, :]).astype("int")
+    altura_bolhas = np.max(circles[:,1])
+    print(altura_bolhas)
+
+    if altura_bolhas > 2800:
+        circles = circles[circles[:,1].argsort()]
+    else:
+        circles = circles[circles[:,0].argsort()]
+
+#     # loop over the (x, y) coordinates and radius of the circles
+    inicio = circles[:3]
+    final = circles[-3:]
+    cabecalho = np.concatenate((inicio, final), axis=0)
+    # print(np.arctan((final[1][1] - inicio[1][1])/(final[1][0] - inicio[1][0])))
+    # for i in circles:
+        # print(i)
+    for (x, y, r) in cabecalho:
+#         # draw the circle in the output image, then draw a rectangle
+#         # corresponding to the center of the circle
+        
+        cv2.circle(output, (x, y), r, (0, 255, 0), 4)
+        cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
  
-# 	# loop over the (x, y) coordinates and radius of the circles
-	inicio = circles[:3]
-	final = circles[-3:]
-	cabecalho = np.concatenate((inicio, final), axis=0)
-	print(np.max(circles[:,1]))
-	# print(np.arctan((final[1][1] - inicio[1][1])/(final[1][0] - inicio[1][0])))
-	# for i in circles:
-		# print(i)
-	for (x, y, r) in cabecalho:
-# 		# draw the circle in the output image, then draw a rectangle
-# 		# corresponding to the center of the circle
-		
-		cv2.circle(output, (x, y), r, (0, 255, 0), 4)
-		cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
- 
-# 	# show the output image
-	# cv2.imshow("output", np.hstack([output]))
-	# cv2.waitKey(0)
-	# cv2.destroyAllWindows()
+#     # show the output image
+    cv2.imshow("output", np.hstack([output]))
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
