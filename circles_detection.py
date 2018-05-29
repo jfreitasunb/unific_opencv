@@ -17,7 +17,7 @@ files = [(f[0],f[1],sorted([img for img in f[2] if img[-4:]=='.jpg']))
 nImg = sum([len(f[2]) for f in files])
 print('Number of files: ',nImg)
 
-alturas = np.array([])
+angulo_rotacao = np.array([])
 
 for (dirpath, dirnames, filenames) in files :
 	for filename in filenames :
@@ -51,16 +51,21 @@ for (dirpath, dirnames, filenames) in files :
             #     # convert the (x, y) coordinates and radius of the circles to integers
                 circles = np.round(circles[0, :]).astype("int")
                 altura_bolhas = np.max(circles[:,1])
-                alturas = np.append(alturas, altura_bolhas)
-                # if altura_bolhas > 2800:
-                #     circles = circles[circles[:,1].argsort()]
-                # else:
-                #     circles = circles[circles[:,0].argsort()]
-                # inicio = circles[:3]
-                # final = circles[-3:]
-                # print((final[1][1] - inicio[1][1])/(final[1][0] - inicio[1][0]))
-print(np.mean(alturas))
-print(np.std(alturas))
+                
+                if altura_bolhas > 2800:
+                    circles = circles[circles[:,1].argsort()]
+                else:
+                    circles = circles[circles[:,0].argsort()]
+                inicio = circles[:3]
+                final = circles[-3:]
+                dx = final[1][0] - inicio[1][0]
+                dy = final[1][1] - inicio[1][1]
+                if dx != 0:
+                    angulo_rotacao = np.append(angulo_rotacao, np.arctan(dy/dx))
+                else:
+                    angulo_rotacao = np.append(angulo_rotacao, 0)
+print(np.mean(angulo_rotacao))
+print(np.std(angulo_rotacao))
 # # construct the argument parser and parse the arguments
 # ap = argparse.ArgumentParser()
 # ap.add_argument("-i", "--image", required = True, help = "Path to the image")
