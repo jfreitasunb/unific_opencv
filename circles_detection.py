@@ -5,8 +5,10 @@ import cv2
 import itertools
 import sys
 import os as _os
+from PIL import Image
+import time as _t
 
-path = "/home/jfreitas/C1-imagens/"
+path = "/home/jfreitas/C1-imagens_180/"
 files = [f for f in _os.walk(path)]
 print('Number of folders:',len(files))
 
@@ -17,10 +19,11 @@ files = [(f[0],f[1],sorted([img for img in f[2] if img[-4:]=='.jpg']))
 nImg = sum([len(f[2]) for f in files])
 print('Number of files: ',nImg)
 
-angulo_rotacao = np.array([])
+# angulo_rotacao = np.array([])
 
 for (dirpath, dirnames, filenames) in files :
 	for filename in filenames :
+            t0 = _t.time()
             pathfile = _os.path.join(dirpath,filename)
             relpathfile = _os.path.join(_os.path.relpath(dirpath,path),
                                             filename)
@@ -58,14 +61,18 @@ for (dirpath, dirnames, filenames) in files :
                     circles = circles[circles[:,0].argsort()]
                 inicio = circles[:3]
                 final = circles[-3:]
-                dx = final[1][0] - inicio[1][0]
-                dy = final[1][1] - inicio[1][1]
+                dx = inicio[1][0] - final[0][0]
+                dy = inicio[1][1] - final[0][1]
                 if dx != 0:
-                    angulo_rotacao = np.append(angulo_rotacao, np.arctan(dy/dx))
+                    angulo_rotacao = np.arctan(dy/dx)
                 else:
-                    angulo_rotacao = np.append(angulo_rotacao, 0)
-print(np.mean(angulo_rotacao))
-print(np.std(angulo_rotacao))
+                    angulo_rotacao = 0
+                
+                # if angulo_rotacao >= 1.1 and angulo_rotacao <= 1.5:
+                #     image_rot = Image.open(pathfile)
+                #     image_rot.rotate(180, expand=True).save(pathfile)
+                t1 = _t.time()
+                print(angulo_rotacao)
 # # construct the argument parser and parse the arguments
 # ap = argparse.ArgumentParser()
 # ap.add_argument("-i", "--image", required = True, help = "Path to the image")
