@@ -5,10 +5,11 @@ import cv2
 import itertools
 import sys
 import os as _os
-from PIL import Image
 import time as _t
 
-path = "/home/jfreitas/C1-imagens_180/"
+t0 = _t.time()
+
+path = "/home/jfreitas/C1-imagens_180/SP_Turma_A/"
 files = [f for f in _os.walk(path)]
 print('Number of folders:',len(files))
 
@@ -19,11 +20,11 @@ files = [(f[0],f[1],sorted([img for img in f[2] if img[-4:]=='.jpg']))
 nImg = sum([len(f[2]) for f in files])
 print('Number of files: ',nImg)
 
-# angulo_rotacao = np.array([])
+angulo_rotacao = np.array([])
+distancia = np.array([])
 
 for (dirpath, dirnames, filenames) in files :
 	for filename in filenames :
-            t0 = _t.time()
             pathfile = _os.path.join(dirpath,filename)
             relpathfile = _os.path.join(_os.path.relpath(dirpath,path),
                                             filename)
@@ -61,18 +62,24 @@ for (dirpath, dirnames, filenames) in files :
                     circles = circles[circles[:,0].argsort()]
                 inicio = circles[:3]
                 final = circles[-3:]
-                dx = inicio[1][0] - final[0][0]
-                dy = inicio[1][1] - final[0][1]
-                if dx != 0:
-                    angulo_rotacao = np.arctan(dy/dx)
-                else:
-                    angulo_rotacao = 0
-                
-                # if angulo_rotacao >= 1.1 and angulo_rotacao <= 1.5:
-                #     image_rot = Image.open(pathfile)
-                #     image_rot.rotate(180, expand=True).save(pathfile)
-                t1 = _t.time()
-                print(angulo_rotacao)
+                vetor_1 = inicio[1][0] - final[0][0], inicio[1][1] - final[0][1]
+                vetor_2 = final[1][0] - inicio[1][0], final[1][1] - inicio[1][1]
+                prod = vetor_1[0] * vetor_2[0] + vetor_1[1] * vetor_2[1]
+                norma_v1 = np.sqrt(vetor_1[0] * vetor_1[0] + vetor_1[1] * vetor_1[1])
+                norma_v2 = np.sqrt(vetor_2[0] * vetor_2[0] + vetor_2[1] * vetor_2[1])
+                angulo = np.absolute(np.arccos(prod/(norma_v1*norma_v2)))
+                dist = np.sqrt((final[0][1] - inicio[1][1])**2 + (final[0][0] - inicio[1][0])**2)
+                angulo_rotacao = np.append(angulo_rotacao, angulo)
+                distancia = np.append(distancia, dist)
+                # if (dist >=2600 and dist <= 3021):
+                print('Arquivo: ',pathfile,' tem ângulo de rotação de: ',angulo)
+                # print('Ângulo no arquivo: ',pathfile,'é de: ',angulo)
+# print('Média dos ângulos: ', np.mean(angulo_rotacao))
+# print('SD dos ângulos: ', np.std(angulo_rotacao))
+# print('Média das distâncias: ', np.mean(distancia))
+# print('SD das distâncias: ', np.std(distancia))
+t1 = _t.time()
+print('Tempo de processamento: ', t1 - t0)
 # # construct the argument parser and parse the arguments
 # ap = argparse.ArgumentParser()
 # ap.add_argument("-i", "--image", required = True, help = "Path to the image")
